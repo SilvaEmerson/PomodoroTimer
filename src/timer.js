@@ -6,7 +6,7 @@ const constructTimer = (sprint) => (time, message) => (callback) => {
     setTimeout(() => {
         createNotification(`${sprint.n} ${message}`);
         try {
-            callback = callback(() => spr++);
+            callback = callback(() => spr.n++);
             callback.bind(spr=sprint)();
         } catch (error) {
             console.log(error.message);

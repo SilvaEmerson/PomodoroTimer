@@ -23,7 +23,7 @@ const constructTimerMock = (sprint, setTimeout, createNotification) =>
 };
 
 describe('Test timer module', () => {
-    it('test order', () => {
-        assert.equal();
+    //TODO
+    it('test sequency', () => {
     });
 });
