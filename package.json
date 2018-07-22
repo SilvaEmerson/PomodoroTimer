@@ -48,6 +48,7 @@
   "dependencies": {
     "electron-compile": "^6.4.3",
     "electron-squirrel-startup": "^1.0.0",
+    "hoek": "^4.2.1",
     "node-notifier": "^5.2.1"
   },
   "devDependencies": {
