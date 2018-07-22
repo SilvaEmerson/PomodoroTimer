@@ -11,7 +11,7 @@ const constructTimer = (sprint) => (time, message) => (callback) => {
         } catch (error) {
             console.log(error.message);
         }
-    }, 1000 * time);
+    }, 60000 * time);
 };
 
 const timer = constructTimer(sprint);
