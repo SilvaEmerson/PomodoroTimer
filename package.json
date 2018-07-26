@@ -5,11 +5,27 @@
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
+    "test": "NODE_ENV=test jest",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
+  },
+  "babel": {"env": {
+    "development": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    },
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }},
+  "jest": {
+    "testPathIgnorePatterns": [
+      "\\.snap$",
+      "<rootDir>/node_modules/",
+      "<rootDir>/out/"
+  ]
   },
   "keywords": [],
   "author": "emerson",
@@ -61,6 +77,7 @@
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-import": "^2",
     "eslint-plugin-jsx-a11y": "^5",
-    "eslint-plugin-react": "^7"
+    "eslint-plugin-react": "^7",
+    "jest": "^23.4.1"
   }
 }
