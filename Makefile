@@ -3,3 +3,6 @@ start:
 
 build:
 	electron-forge make .
+
+tests:
+	npm test

@@ -1,29 +1,41 @@
-import assert from 'assert';
-import { actionTime, sprint, halfTime } from "../src/timer";
-
-const setTimeoutMock = (fn, time) => {
+import {sprint} from '../src/timer';
+const setTimeoutMock = (fn) => {
     fn();
 };
 
-const createNotificationMock = (msg) => msg;
 
-const timerMock = constructTimerMock(sprint);
+const createNotificationMock = (msg) => msg;
 
 const constructTimerMock = (sprint, setTimeout, createNotification) =>
     (time, message) => (callback) => {
-    setTimeout(() => {
-        createNotification(`${sprint.n} ${message}`);
+    let behavior = (resolve, reject) => setTimeout(() => {
         try {
-            callback = callback(() => spr++);
-            callback.bind(spr=sprint)();
+            sprint.n = callback(sprint.n);
+            resolve(createNotification(`${sprint.n} ${message}`));
         } catch (error) {
-            console.log(error.message);
+            reject(error.message);
         }
-    }, 1000 * time);
+    }, 60000 * time);
+
+    return new Promise(behavior);
 };
 
+const timerMock = constructTimerMock(
+    sprint,
+    setTimeoutMock,
+    createNotificationMock
+);
+
+
 describe('Test timer module', () => {
-    //TODO
-    it('test sequency', () => {
+    it('change sprint number', async () => {
+        let sprintBefore = sprint.n;
+        let res = await timerMock(25, 'Pomodoro Start!')((n) => ++n);
+        expect(res).not.toBe(sprint.n);
+    });
+
+    it('test notification creation', async () => {
+        let result = await timerMock(25, 'º Terminated')((n) => ++n);
+        expect(result).toBe(`${sprint.n} º Terminated`);
     });
 });
