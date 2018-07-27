@@ -4,7 +4,10 @@ module.exports  = {
         "ecmaVersion": 2017,
         "sourceType": "module",
         "ecmaFeatures": {
-            "jsx": true,
+            "modules": true,
         }
     },
+    "rules": {
+        "switch-colon-spacing": 0,
+    }
 };
