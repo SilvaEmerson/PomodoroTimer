@@ -1,40 +1,70 @@
-import createNotification from './notifications';
-import { resolve } from 'url';
+import createNotification from '../notification/notification';
+
+const factors = {
+    'minutes': 60000,
+    'seconds': 1000,
+};
+
 
 export const sprint = {n: 1};
 
-export const constructTimer = (sprint) => (time, message) => (callback) => {
-    const timerBehavior = (resolve, reject) => {
-        setTimeout(() => {
-            try {
-                callback = callback(sprint.n);
-                resolve(createNotification(`${sprint.n} ${message}`));
-            } catch (error) {
-                reject(error.message);
-            }
-        }, 60000 * time);
-    };
 
-    return new Promise(timerBehavior);
+const timerBehavior = ({factors, sprint}) => ({time, factor, message}) =>
+    (resolve, reject) => {
+    setTimeout(() => {
+        try {
+            resolve(createNotification(`${sprint.n} ${message}`));
+        } catch (error) {
+            reject(error.message);
+        }
+    }, factors[factor] * time);
 };
 
-export const timer = constructTimer(sprint);
-export const actionTime = timer(25, 'º Sprint Terminated');
-export const halfTime = timer(5, 'Half Time terminated');
-export const biggerHalfTime = timer(10, 'Half Time terminated');
 
-const onTap = () => {
-    let date = new Date();
+const constructTimer = (timerBehavior) => (...args) => new Promise(
+    timerBehavior(args[0])
+);
 
-    let state = document.getElementById('state');
 
-    state.innerText = (!state.innerText)
-    ? `Pomodoro started at: ${date.getHours()}:${date.getMinutes()}`
-    : '';
+export const timer = constructTimer(timerBehavior({
+        factors: factors,
+        sprint: sprint,
+}));
 
-    createNotification('Pomodoro Started');
 
-    (sprint.n !== 5)
-    ? actionTime(halfTime)
-    : biggerHalfTime(() => spr = 1);
+export const actionTime = timer({
+    time: 10,
+    factor: 'seconds',
+    message: 'º Sprint Terminated',
+});
+
+
+export const halfTime = timer({
+    time: 10,
+    factor: 'seconds',
+    message: 'º Half Time terminated',
+});
+
+
+export const biggerHalfTime = timer({
+    time: 10,
+    factor: 'minutes',
+    message: 'Bigger Half Time terminated',
+});
+
+
+export const initMessage = createNotification('Pomodoro Started');
+
+const createSequence = (actionTime, halfTime) => async () => {
+    let result = await actionTime;
+    console.log(result);
+    result();
+    let halfRes = await halfTime;
+    halfRes();
+    ++sprint.n;
+    return 'Sucess';
 };
+
+export const actionTimeWithNormalHalf = createSequence(actionTime, halfTime);
+
+export const actionTimeWithBigHalf = createSequence(actionTime, biggerHalfTime);
