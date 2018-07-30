@@ -5,9 +5,7 @@ const factors = {
     'seconds': 1000,
 };
 
-
 export const sprint = {n: 1};
-
 
 const timerBehavior = ({factors, sprint}) => ({time, factor, message}) =>
     (resolve, reject) => {
@@ -20,51 +18,52 @@ const timerBehavior = ({factors, sprint}) => ({time, factor, message}) =>
     }, factors[factor] * time);
 };
 
-
-const constructTimer = (timerBehavior) => (...args) => new Promise(
+const constructTimer = (timerBehavior) => (...args) => () => new Promise(
     timerBehavior(args[0])
 );
 
-
-export const timer = constructTimer(timerBehavior({
+const timer = constructTimer(timerBehavior({
         factors: factors,
         sprint: sprint,
 }));
 
-
-export const actionTime = timer({
-    time: 10,
-    factor: 'seconds',
+const actionTime = timer({
+    time: 25,
+    factor: 'minutes',
     message: 'º Sprint Terminated',
 });
 
-
-export const halfTime = timer({
-    time: 10,
-    factor: 'seconds',
+const halfTime = timer({
+    time: 5,
+    factor: 'minutes',
     message: 'º Half Time terminated',
 });
 
-
-export const biggerHalfTime = timer({
+const biggerHalfTime = timer({
     time: 10,
     factor: 'minutes',
     message: 'Bigger Half Time terminated',
 });
 
-
 export const initMessage = createNotification('Pomodoro Started');
 
-const createSequence = (actionTime, halfTime) => async () => {
-    let result = await actionTime;
-    console.log(result);
+export const createSequence = (sprint, actionTime, halfType) => async () => {
+    let result = await actionTime();
     result();
-    let halfRes = await halfTime;
-    halfRes();
+    let halfResult = await halfType();
+    halfResult();
     ++sprint.n;
     return 'Sucess';
 };
 
-export const actionTimeWithNormalHalf = createSequence(actionTime, halfTime);
+export const actionTimeWithNormalHalf = createSequence(
+    sprint,
+    actionTime,
+    halfTime
+);
 
-export const actionTimeWithBigHalf = createSequence(actionTime, biggerHalfTime);
+export const actionTimeWithBigHalf = createSequence(
+    sprint,
+    actionTime,
+    biggerHalfTime
+);
