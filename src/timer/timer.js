@@ -1,14 +1,17 @@
 import createNotification from '../notification/notification';
 
-const factors = {
-    'minutes': 60000,
-    'seconds': 1000,
+export const sprint = {
+    n: 1,
 };
 
-export const sprint = {n: 1};
-
-const timerBehavior = ({factors, sprint}) => ({time, factor, message}) =>
+export const timerBehavior = ({createNotification, sprint}) =>
+    ({time, factor, message}) =>
     (resolve, reject) => {
+    const factors = {
+        'minutes': 60000,
+        'seconds': 1000,
+    };
+
     setTimeout(() => {
         try {
             resolve(createNotification(`${sprint.n} ${message}`));
@@ -18,13 +21,13 @@ const timerBehavior = ({factors, sprint}) => ({time, factor, message}) =>
     }, factors[factor] * time);
 };
 
-const constructTimer = (timerBehavior) => (...args) => () => new Promise(
+export const constructTimer = (timerBehavior) => (...args) => () => new Promise(
     timerBehavior(args[0])
 );
 
-const timer = constructTimer(timerBehavior({
-        factors: factors,
+export const timer = constructTimer(timerBehavior({
         sprint: sprint,
+        createNotification: createNotification,
 }));
 
 const actionTime = timer({
