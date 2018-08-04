@@ -1,7 +1,7 @@
 import {
     constructTimer,
     sprint,
-    actionTimeWithNormalHalf,
+    createSequence,
     timerBehavior,
 } from '../src/timer/timer';
 
@@ -13,50 +13,62 @@ const timer = constructTimer(timerBehavior({
 }));
 
 const actionTime = timer({
-    time: 2,
+    time: 0,
     factor: 'seconds',
     message: 'º Sprint Terminated',
 });
 
 const halfTime = timer({
-    time: 1,
+    time: 0,
     factor: 'seconds',
     message: 'º Sprint Terminated',
 });
 
-beforeEach(() => {
-    sprint.n = 0;
-});
-
 describe('Test timer module', () => {
-    jest.useFakeTimers();
-    it('Test actionTimeWithNormalHalf func call', async () => {
-        let res = await actionTimeWithNormalHalf(
+    it('Test actionTimeWithNormalHalf func call', async (done) => {
+        let result = await createSequence(
             sprint,
             actionTime,
             halfTime
-        );
-        expect(res).not.toBeNull();
+        )();
+        expect(result).not.toBeNull();
+        sprint.n = 0;
+        done();
     });
 
-    it('Test change sprint number', () => {
-        actionTimeWithNormalHalf(
+    it('Test change sprint number', async (done) => {
+        await createSequence(
             sprint,
             actionTime,
             halfTime
-        );
+        )();
         expect(sprint.n).toBe(1);
+        done();
     });
 
-    it('Timer should not be null', async () => {
-        let res = await actionTime();
-
-        expect(res).not.toBeNull();
+    it('Should return Sucess message', async (done) => {
+        let result = await createSequence(
+            sprint,
+            actionTime,
+            halfTime
+        )();
+        expect(result).toBe('Sucess');
+        done();
     });
 
-    it('Timer should return message', async () => {
-        let res = await actionTime();
+    it('Timer should not be null', async (done) => {
         let sprintNumber = sprint.n;
+        let res = await actionTime();
+        res = res(`${sprintNumber} º Sprint Terminated`);
+        expect(res).not.toBeNull();
+        done();
+    });
+
+    it('Timer should return message', async (done) => {
+        let sprintNumber = sprint.n;
+        let res = await actionTime();
+        res = res(`${sprintNumber} º Sprint Terminated`);
         expect(res).toBe(`${sprintNumber} º Sprint Terminated`);
+        done();
     });
 });
