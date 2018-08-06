@@ -5,34 +5,39 @@ import {
     timerBehavior,
 } from '../src/timer/timer';
 
-const createNotification = jest.fn(() => (str) => str);
+const createNotification = jest.fn((msg) => () => msg);
 
-const timer = constructTimer(timerBehavior({
+const behavior = timerBehavior({
     sprint: sprint,
     createNotification: createNotification,
-}));
-
-const actionTime = timer({
-    time: 0,
-    factor: 'seconds',
-    message: 'º Sprint Terminated',
 });
 
-const halfTime = timer({
+const actionTime = constructTimer(behavior({
     time: 0,
-    factor: 'seconds',
+    factor: 'minutes',
     message: 'º Sprint Terminated',
+}));
+
+const halfTime = constructTimer(behavior({
+    time: 0,
+    factor: 'minutes',
+    message: 'º Half Time terminated',
+}));
+
+beforeEach(() => {
+    sprint.n = 1;
+    createNotification.mock.calls.length = 0;
 });
 
 describe('Test timer module', () => {
-    it('Test actionTimeWithNormalHalf func call', async (done) => {
+    it('actionTimeWithNormalHalf should not retunr null response',
+        async (done) => {
         let result = await createSequence(
             sprint,
             actionTime,
             halfTime
         )();
         expect(result).not.toBeNull();
-        sprint.n = 0;
         done();
     });
 
@@ -57,18 +62,33 @@ describe('Test timer module', () => {
     });
 
     it('Timer should not be null', async (done) => {
-        let sprintNumber = sprint.n;
         let res = await actionTime();
-        res = res(`${sprintNumber} º Sprint Terminated`);
-        expect(res).not.toBeNull();
+        expect(res()).not.toBeNull();
+        done();
+    });
+
+    it('Create notification should was called', async (done) => {
+        expect(createNotification.mock.calls.length).toBe(1);
         done();
     });
 
     it('Timer should return message', async (done) => {
-        let sprintNumber = sprint.n;
         let res = await actionTime();
-        res = res(`${sprintNumber} º Sprint Terminated`);
-        expect(res).toBe(`${sprintNumber} º Sprint Terminated`);
+        expect(res()).toBe(`${sprint.n} º Sprint Terminated`);
+        done();
+    });
+
+    it('Should reject message', async (done) => {
+        try {
+            const actionTimeError = constructTimer(behavior({
+                time: 0,
+                factor: 'minutes',
+                message: 12,
+            }));
+            await actionTimeError();
+        } catch (e) {
+            expect(e).toBe('Message must be string');
+        }
         done();
     });
 });
