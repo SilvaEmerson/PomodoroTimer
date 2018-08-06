@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest && codecov",
+    "test": "NODE_ENV=test jest --forceExit && codecov",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -28,6 +28,7 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
+    "testEnvironment": "node",
     "collectCoverage": true,
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",

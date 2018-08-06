@@ -1,41 +1,94 @@
-import {sprint} from '../src/timer';
-const setTimeoutMock = (fn) => {
-    fn();
-};
-
-
-const createNotificationMock = (msg) => msg;
-
-const constructTimerMock = (sprint, setTimeout, createNotification) =>
-    (time, message) => (callback) => {
-    let behavior = (resolve, reject) => setTimeout(() => {
-        try {
-            sprint.n = callback(sprint.n);
-            resolve(createNotification(`${sprint.n} ${message}`));
-        } catch (error) {
-            reject(error.message);
-        }
-    }, 60000 * time);
-
-    return new Promise(behavior);
-};
-
-const timerMock = constructTimerMock(
+import {
+    constructTimer,
     sprint,
-    setTimeoutMock,
-    createNotificationMock
-);
+    createSequence,
+    timerBehavior,
+} from '../src/timer/timer';
 
+const createNotification = jest.fn((msg) => () => msg);
+
+const behavior = timerBehavior({
+    sprint: sprint,
+    createNotification: createNotification,
+});
+
+const actionTime = constructTimer(behavior({
+    time: 0,
+    factor: 'minutes',
+    message: 'º Sprint Terminated',
+}));
+
+const halfTime = constructTimer(behavior({
+    time: 0,
+    factor: 'minutes',
+    message: 'º Half Time terminated',
+}));
+
+beforeEach(() => {
+    sprint.n = 1;
+    createNotification.mock.calls.length = 0;
+});
 
 describe('Test timer module', () => {
-    it('change sprint number', async () => {
-        let sprintBefore = sprint.n;
-        let res = await timerMock(25, 'Pomodoro Start!')((n) => ++n);
-        expect(res).not.toBe(sprint.n);
+    it('actionTimeWithNormalHalf should not retunr null response',
+        async (done) => {
+        let result = await createSequence(
+            sprint,
+            actionTime,
+            halfTime
+        )();
+        expect(result).not.toBeNull();
+        done();
     });
 
-    it('test notification creation', async () => {
-        let result = await timerMock(25, 'º Terminated')((n) => ++n);
-        expect(result).toBe(`${sprint.n} º Terminated`);
+    it('Test change sprint number', async (done) => {
+        await createSequence(
+            sprint,
+            actionTime,
+            halfTime
+        )();
+        expect(sprint.n).toBe(1);
+        done();
+    });
+
+    it('Should return Sucess message', async (done) => {
+        let result = await createSequence(
+            sprint,
+            actionTime,
+            halfTime
+        )();
+        expect(result).toBe('Sucess');
+        done();
+    });
+
+    it('Timer should not be null', async (done) => {
+        let res = await actionTime();
+        expect(res()).not.toBeNull();
+        done();
+    });
+
+    it('Create notification should was called', async (done) => {
+        expect(createNotification.mock.calls.length).toBe(1);
+        done();
+    });
+
+    it('Timer should return message', async (done) => {
+        let res = await actionTime();
+        expect(res()).toBe(`${sprint.n} º Sprint Terminated`);
+        done();
+    });
+
+    it('Should reject message', async (done) => {
+        try {
+            const actionTimeError = constructTimer(behavior({
+                time: 0,
+                factor: 'minutes',
+                message: 12,
+            }));
+            await actionTimeError();
+        } catch (e) {
+            expect(e).toBe('Message must be string');
+        }
+        done();
     });
 });
