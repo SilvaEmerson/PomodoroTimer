@@ -13,40 +13,38 @@ export const timerBehavior = ({createNotification, sprint}) =>
     };
 
     setTimeout(() => {
-        try {
-            resolve(createNotification(`${sprint.n} ${message}`));
-        } catch (error) {
-            reject(error.message);
-        }
+        (typeof(message) === 'string')
+        ? resolve(createNotification(`${sprint.n} ${message}`))
+        : reject('Message must be string');
     }, factors[factor] * time);
 };
 
-export const constructTimer = (timerBehavior) => (...args) => () => new Promise(
-    timerBehavior(args[0])
-);
+export const constructTimer = (timerBehavior) => () =>
+    new Promise(timerBehavior);
 
-export const timer = constructTimer(timerBehavior({
-        sprint: sprint,
-        createNotification: createNotification,
-}));
+const behavior = timerBehavior({
+    sprint: sprint,
+    createNotification: createNotification,
+});
 
-const actionTime = timer({
+
+const actionTime = constructTimer(behavior({
     time: 25,
     factor: 'minutes',
     message: 'º Sprint Terminated',
-});
+}));
 
-const halfTime = timer({
+const halfTime = constructTimer(behavior({
     time: 5,
     factor: 'minutes',
     message: 'º Half Time terminated',
-});
+}));
 
-const biggerHalfTime = timer({
+const biggerHalfTime = constructTimer(behavior({
     time: 10,
     factor: 'minutes',
     message: 'Bigger Half Time terminated',
-});
+}));
 
 export const initMessage = createNotification('Pomodoro Started');
 
