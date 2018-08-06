@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 describe('Test timer module', () => {
-    it('actionTimeWithNormalHalf should not retunr null response',
+    it('actionTimeWithNormalHalf should not return null response',
         async (done) => {
         let result = await createSequence(
             sprint,
