@@ -25,8 +25,8 @@ const halfTime = constructTimer(behavior({
 }));
 
 beforeEach(() => {
-    sprint.n = 1;
-    createNotification.mock.calls.length = 0;
+    sprint.n = 0;
+    createNotification.mock.calls.length = 1;
 });
 
 describe('Test timer module', () => {
