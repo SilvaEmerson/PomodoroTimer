@@ -4,3 +4,4 @@ out
 .directory
 package-lock.json
 /coverage
+.vscode
