@@ -1,5 +1,5 @@
 start:
-	electron-forge start
+	npm start
 
 build:
 	electron-forge make .
