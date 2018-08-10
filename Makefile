@@ -1,8 +1,8 @@
 start:
-	electron-forge start
+	npm start
 
 build:
 	electron-forge make .
 
-tests:
+run_test:
 	npm test

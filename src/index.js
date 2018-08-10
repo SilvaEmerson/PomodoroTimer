@@ -1,4 +1,6 @@
-import { app, BrowserWindow } from 'electron';
+import {app, BrowserWindow} from 'electron';
+import {actionTimeWithNormalHalf, initMessage,
+    sprint, actionTimeWithBigHalf} from './timer/timer';
 import path from 'path';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -9,6 +11,22 @@ if (require('electron-squirrel-startup')) {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+const onTap = () => {
+    let date = new Date();
+
+    let state = document.getElementById('state');
+
+    state.innerText = (!state.innerText)
+    ? `Pomodoro started at: ${date.getHours()}:${date.getMinutes()}`
+    : `Pomodoro started at: ${date.getHours()}:${date.getMinutes()}`;
+
+    initMessage();
+
+    (sprint.n % 4 !== 0)
+    ? actionTimeWithNormalHalf().then((msg) => console.log(msg))
+    : actionTimeWithBigHalf().then((msg) => console.log(msg));
+};
 
 const createWindow = () => {
     // Create the browser window.
