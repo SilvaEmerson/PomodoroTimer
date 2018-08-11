@@ -2,7 +2,7 @@ start:
 	npm start
 
 build:
-	electron-forge make .
+	npm run-script make .
 
 run_test:
 	npm test
