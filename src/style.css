@@ -1,0 +1,7 @@
+.active {
+    background: lightgreen;
+}
+
+.blocked {
+    background: lightcoral;
+}

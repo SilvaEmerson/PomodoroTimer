@@ -1,73 +1,45 @@
-import {app, BrowserWindow} from 'electron';
-import {actionTimeWithNormalHalf, initMessage,
-    sprint, actionTimeWithBigHalf} from './timer/timer';
-import path from 'path';
+import {
+    actionTimeWithNormalHalf, initMessage,
+    sprint, actionTimeWithBigHalf,
+} from './timer/timer';
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-    app.quit();
-}
+const getElement = (element) => document.getElementById(element);
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+export const setBtnState = (element) => !element.disabled;
 
-const onTap = () => {
+export const changeStyle = (element) =>
+    (element.className === 'blocked')
+    ? 'active'
+    : 'blocked';
+
+
+export const getTimeRefactored = (time) => (time).toString().padStart(2, '0');
+
+const onTap = (event) => {
     let date = new Date();
 
-    let state = document.getElementById('state');
+    let state = getElement('state');
 
-    state.innerText = (!state.innerText)
-    ? `Pomodoro started at: ${date.getHours()}:${date.getMinutes()}`
-    : `Pomodoro started at: ${date.getHours()}:${date.getMinutes()}`;
+    state.innerText = `Pomodoro started at:
+                       ${getTimeRefactored(date.getHours())}:
+                       ${getTimeRefactored(date.getMinutes())}`;
+
+    event.target.disabled = setBtnState(event.target);
+    event.target.className = changeStyle(event.target);
 
     initMessage();
 
     (sprint.n % 4 !== 0)
-    ? actionTimeWithNormalHalf().then((msg) => console.log(msg))
-    : actionTimeWithBigHalf().then((msg) => console.log(msg));
+        ? actionTimeWithNormalHalf().then(
+            (msg) => {
+                event.target.disabled = setBtnState(event.target);
+                event.target.clasName = changeStyle(event.target);
+            }
+        )
+        : actionTimeWithBigHalf().then(
+            (msg) => {
+                event.target.disabled = setBtnState(event.target);
+                event.target.clasName = changeStyle(event.target);
+            }
+        );
 };
-
-const createWindow = () => {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        icon: path.join(__dirname, 'favicon.png'),
-        width: 800,
-        height: 600,
-    });
-
-    // and load the index.html of the app.
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', () => {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
-};
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
-
-app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-        createWindow();
-    }
-});
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.

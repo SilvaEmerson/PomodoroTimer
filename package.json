@@ -3,7 +3,7 @@
   "productName": "PomodoroTimer",
   "version": "1.0.0",
   "description": "A pomodorotimer electron app",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "NODE_ENV=test jest --forceExit && codecov",
     "start": "electron-forge start",
@@ -52,7 +52,12 @@
       "electronWinstallerConfig": {
         "name": "PomodoroTimer"
       },
-      "electronInstallerDebian": {},
+      "electronInstallerDebian": {
+        "icon": "src/favicon.png",
+        "categories": [
+          "Utility"
+        ]
+      },
       "electronInstallerRedhat": {},
       "github_repository": {
         "owner": "",
