@@ -1,5 +1,5 @@
 # PomodoroTimer 
-
+[![codecov](https://codecov.io/gh/SilvaEmerson/PomodoroTimer/branch/develop/graph/badge.svg)](https://codecov.io/gh/SilvaEmerson/PomodoroTimer)
 > One Paragraph of project description goes here
 
 ## Built With
