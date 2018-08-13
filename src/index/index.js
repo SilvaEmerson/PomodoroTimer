@@ -1,9 +1,4 @@
-import {
-    actionTimeWithNormalHalf, initMessage,
-    sprint, actionTimeWithBigHalf,
-} from './timer/timer';
-
-const getElement = (element) => document.getElementById(element);
+export const getElement = ($, element) => $.getElementById(element);
 
 export const setBtnState = (element) => !element.disabled;
 
@@ -15,10 +10,13 @@ export const changeStyle = (element) =>
 
 export const getTimeRefactored = (time) => (time).toString().padStart(2, '0');
 
-const onTap = (event) => {
+export const preState = (
+        sprint, initMessage, actionTimeWithNormalHalf, actionTimeWithBigHalf
+    ) =>
+    (doc) => (event) => {
     let date = new Date();
 
-    let state = getElement('state');
+    let state = getElement(doc, 'state');
 
     state.innerText = `Pomodoro started at:
                        ${getTimeRefactored(date.getHours())}:

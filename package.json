@@ -2,7 +2,7 @@
   "name": "PomodoroTimer",
   "productName": "PomodoroTimer",
   "version": "1.0.0",
-  "description": "A pomodorotimer electron app",
+  "description": "A pomodoro timer electron app",
   "main": "src/main.js",
   "scripts": {
     "test": "NODE_ENV=test jest --forceExit && codecov",
