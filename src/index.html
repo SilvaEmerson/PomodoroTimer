@@ -6,10 +6,36 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
-    <button id="startPomodoro" onclick="onTap(event)" class="active">
-      Begin Pomodoro
-    </button>
-    <h1 id="state"></h1>
+    <p>
+      <label for="workTime" >I want work for</label>
+      <input type="number" step="5" max="60" min="1" value="25" id="workTime" name="workTime">
+      <label for="workTime">minutes</label>
+    </p>
+    
+    <p>
+      <label for="restTime">I want rest for</label>
+      <input type="number" step="5" max="60" min="1" value="5" id="restTime" name="restTime">
+      <label for="restTime">minutes</label>
+    </p>
+
+    <p>
+      <label for="biggestRestTime">And after 4 iterations I want rest</label>
+      <input type="number" step="5" max="60" min="1" value="5" id="biggestRestTime" name="biggestRestTime">
+      <label for="biggestRestTime">minutes</label>
+    </p>
+
+    <p>
+      <button id="confirmConfig">I'm sure about that</button>
+    </p>
+
+    <p>
+      <button id="startPomodoro" class="active" style="visibility: hidden;">
+        Begin Pomodoro
+      </button>
+    </p>
+    <p>
+      <h1 id="state"></h1>
+    </p>
     <script src="./script.js"></script>
   </body>
 </html>
