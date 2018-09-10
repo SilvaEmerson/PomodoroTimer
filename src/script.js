@@ -8,7 +8,7 @@ import {
 } from './timer/timer';
 
 
-const actionTimeWithNormalHalf = (time, timeInterval) => {
+const action = (time, timeInterval) => {
     let workConfig = {
         factor: 'minutes',
         time: time,
@@ -27,7 +27,6 @@ const actionTimeWithNormalHalf = (time, timeInterval) => {
     );
 };
 
-const actionTimeWithBigHalf = actionTimeWithNormalHalf;
 
 const workTime = getElement(document, '#workTime');
 const restTime = getElement(document, '#restTime');
@@ -40,16 +39,17 @@ const addListener = ({element, event, action}) => {
     element[event] = action;
 };
 
+
 addListener({
     element: confirmConfigBtn,
     action: () => {
         const state = preState(
             sprint,
             initMessage,
-            actionTimeWithNormalHalf(
+            action(
                 workTime.value, restTime.value
             ),
-            actionTimeWithBigHalf(
+            action(
                 workTime.value, biggestRestTime.value
             )
         );
