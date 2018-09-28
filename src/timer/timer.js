@@ -22,7 +22,7 @@ export const timerBehavior = ({createNotification, sprint}) =>
 export const constructTimer = (timerBehavior) => () =>
     new Promise(timerBehavior);
 
-const behavior = timerBehavior({
+export const behavior = timerBehavior({
     sprint: sprint,
     createNotification: createNotification,
 });
