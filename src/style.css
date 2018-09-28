@@ -1,12 +1,4 @@
-input#workTime {
-	width: 30px;
-}
-
-input#restTime {
-	width: 30px;
-}
-
-input#biggestRestTime {
+input{
 	width: 30px;
 }
 
@@ -16,10 +8,4 @@ input#biggestRestTime {
 
 .blocked {
     background: lightcoral;
-}
-
-#py {
-	border: solid;
-	background: none;
-	border-radius: 0px;
 }
