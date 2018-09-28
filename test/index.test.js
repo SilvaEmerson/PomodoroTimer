@@ -18,7 +18,7 @@ const event = {
 };
 
 const document = {
-    getElementById: (element) => {
+    querySelector: (element) => {
         return {
             innerText: 'Sucess',
 

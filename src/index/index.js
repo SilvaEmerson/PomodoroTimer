@@ -1,4 +1,4 @@
-export const getElement = ($, element) => $.getElementById(element);
+export const getElement = ($, element) => $.querySelector(element);
 
 export const setBtnState = (element) => !element.disabled;
 
@@ -16,7 +16,7 @@ export const preState = (
     (doc) => (event) => {
     let date = new Date();
 
-    let state = getElement(doc, 'state');
+    let state = getElement(doc, '#state');
 
     state.innerText = `Pomodoro started at:
                        ${getTimeRefactored(date.getHours())}:
@@ -31,13 +31,13 @@ export const preState = (
         ? actionTimeWithNormalHalf().then(
             (msg) => {
                 event.target.disabled = setBtnState(event.target);
-                event.target.clasName = changeStyle(event.target);
+                event.target.className = changeStyle(event.target);
             }
         )
         : actionTimeWithBigHalf().then(
             (msg) => {
                 event.target.disabled = setBtnState(event.target);
-                event.target.clasName = changeStyle(event.target);
+                event.target.className = changeStyle(event.target);
             }
         );
 };

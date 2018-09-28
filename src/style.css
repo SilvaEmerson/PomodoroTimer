@@ -1,7 +1,25 @@
+input#workTime {
+	width: 30px;
+}
+
+input#restTime {
+	width: 30px;
+}
+
+input#biggestRestTime {
+	width: 30px;
+}
+
 .active {
     background: lightgreen;
 }
 
 .blocked {
     background: lightcoral;
+}
+
+#py {
+	border: solid;
+	background: none;
+	border-radius: 0px;
 }
