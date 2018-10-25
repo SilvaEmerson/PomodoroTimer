@@ -5,7 +5,7 @@
   "description": "A pomodoro timer electron app",
   "main": "src/main.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --forceExit && codecov -t a9edee92-3ce3-4223-a3ee-f7ccd9e0111e",
+    "test": "NODE_ENV=test jest --forceExit",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
