@@ -7,7 +7,6 @@ export const changeStyle = (element) =>
     ? 'active'
     : 'blocked';
 
-
 export const getTimeRefactored = (time) => (time).toString().padStart(2, '0');
 
 export const preState = (

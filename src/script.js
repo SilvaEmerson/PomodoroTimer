@@ -1,4 +1,5 @@
 import {preState, getElement} from './index/index';
+import {curry} from './fpUtils';
 import {
     sprint,
     initMessage,
@@ -7,6 +8,11 @@ import {
     createSequence,
 } from './timer/timer';
 
+const workTime = getElement(document, '#workTime');
+const restTime = getElement(document, '#restTime');
+const confirmConfigBtn = getElement(document, '#confirmConfig');
+const biggestRestTime = getElement(document, '#biggestRestTime');
+const startPomodoroBtn = getElement(document, '#startPomodoro');
 
 const action = (time, timeInterval) => {
     let workConfig = {
@@ -27,40 +33,26 @@ const action = (time, timeInterval) => {
     );
 };
 
+const addListener = (event, action, element) => element[event] = action;
 
-const workTime = getElement(document, '#workTime');
-const restTime = getElement(document, '#restTime');
-const confirmConfigBtn = getElement(document, '#confirmConfig');
-const biggestRestTime = getElement(document, '#biggestRestTime');
-const startPomodoroBtn = getElement(document, '#startPomodoro');
+const addListenerCurried = curry(addListener);
 
+const addOnclickEvent = addListenerCurried('onclick');
 
-const addListener = ({element, event, action}) => {
-    element[event] = action;
+const startBtnAction = (startPomodoroBtn) => (state) => {
+    startPomodoroBtn.style.visibility = 'visible';
+    addOnclickEvent(state(document), startPomodoroBtn);
 };
 
+const confirmConfigAction = (startBtnAction) => () => {
+    const state = preState(sprint, initMessage,
+        action(workTime.value, restTime.value),
+        action(workTime.value, biggestRestTime.value)
+    );
 
-addListener({
-    element: confirmConfigBtn,
-    action: () => {
-        const state = preState(
-            sprint,
-            initMessage,
-            action(
-                workTime.value, restTime.value
-            ),
-            action(
-                workTime.value, biggestRestTime.value
-            )
-        );
+    startBtnAction(state);
+};
 
-        const onTap = state(document);
-        startPomodoroBtn.style.visibility = 'visible';
-        addListener({
-            element: startPomodoroBtn,
-            event: 'onclick',
-            action: onTap,
-        });
-    },
-    event: 'onclick',
-});
+addOnclickEvent(confirmConfigAction(
+    startBtnAction(startPomodoroBtn)
+    ), confirmConfigBtn);
